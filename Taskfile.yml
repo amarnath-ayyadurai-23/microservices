@@ -1,0 +1,35 @@
+version: '3'
+
+vars:
+  GO_BASIC_FOLDER: functions/basicgo
+  GO_HTTP_FOLDER: functions/http
+  GO_TEST_FOLDER: tests
+  GO_REST_FOLDER: functions
+
+tasks:
+  default:
+    desc: "0.0 showing all the commands possible under the directory"
+    cmds: 
+      - task -a
+
+  local-db:
+    desc: "Setup local DB and runs migration."
+    cmds:
+      - task: local-db-build
+      - task: local-migration-build
+
+  local-db-build:
+    desc: "4.0 Setup local DB."
+    cmds:
+      - docker-compose -f docker-compose.yml up -d db
+
+  local-migration-build:
+    desc: "4.1 Runs flyway migration."
+    cmds:
+      - docker-compose -f docker-compose.yml up -d flyway
+
+  local-clean:
+    desc: "Clean up local DB and migration."
+    cmds:
+      - docker-compose -f docker-compose.yml down
+  
