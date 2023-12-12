@@ -38,10 +38,13 @@ func (a *api) LogF(format string) string {
 
 func (a *api) Run() {
 
-	a.router.Handle("GET", "/",a.Ping)
+	a.router.Handle(http.MethodGet, "/",a.Ping)
 	
-	a.router.Handle("GET", "/customers", a.GetCustomers)
-	a.router.Handle("GET", "/customers/:id", a.GetCustomer)
+	a.router.Handle(http.MethodPost, "/customers", a.CreateCustomer)
+	a.router.Handle(http.MethodDelete, "/customers/:id", a.DeleteCustomer)
+	a.router.Handle(http.MethodGet, "/customers", a.GetCustomers)
+	a.router.Handle(http.MethodGet, "/customers/:id", a.GetCustomer)
+	a.router.Handle(http.MethodGet, "/customers/email/:email", a.QuerybyEmail)
 
 	a.log.Println(a.LogF("Starting server on port 8080"))
 	http.ListenAndServe(":8080", a.router)

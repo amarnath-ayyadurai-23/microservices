@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"unsafe"
 
 	"github.com/amarnath-ayyadurai-23/microservices/models/customers"
 	"github.com/dimfeld/httptreemux/v5"
@@ -65,4 +64,57 @@ func (a *api) GetCustomer(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+}
+
+func (a *api) CreateCustomer(w http.ResponseWriter, r *http.Request){
+
+	w.Header().Set("Content-Type", "application/json")
+	var cus customers.DBCustomer
+	err := json.NewDecoder(r.Body).Decode(&cus)
+	if err != nil {
+		a.log.Printf("<API> %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	err = a.customer.CreateCustomer(cus)
+	if err != nil {
+		a.log.Printf("<Database> %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	
+}
+
+func (a *api) QuerybyEmail(w http.ResponseWriter, r *http.Request){
+
+	w.Header().Set("Content-Type", "application/json")
+	email := httptreemux.ContextParams(r.Context())["email"]
+	
+	cus, err := a.customer.QuerybyEmail(email)
+	if err != nil {
+		a.log.Printf("<Database> %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	err = json.NewEncoder(w).Encode(cus)
+	if err != nil {
+		a.log.Printf("<API> %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (a *api) DeleteCustomer(w http.ResponseWriter, r *http.Request){
+
+	w.Header().Set("Content-Type", "application/json")
+	id := httptreemux.ContextParams(r.Context())["id"]
+	
+	err := a.customer.DeletebyID(id)
+	if err != nil {
+		a.log.Printf("<Database> %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
 }

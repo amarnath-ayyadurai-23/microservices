@@ -69,19 +69,17 @@ func NamedExecContext(ctx context.Context, log *log.Logger, db sqlx.ExtContext, 
 
 	lid, err := res.LastInsertId()
 	if err != nil {
-		return DBResults{}, err
+		log.Println("<DataBase> LastInsertId error: ", err)
+		//return DBResults{}, err
 	}
 	dbres.LastInsertID = lid
 
 	ra, err := res.RowsAffected()
 	if err != nil {
-		return DBResults{}, err
+		log.Println("<DataBase> RowsAffected error: ", err)
+		// return DBResults{}, err
 	}
 	dbres.AffectedRows = ra
-
-	if val, err := res.RowsAffected(); err != nil {
-		dbres.AffectedRows = val
-	}
 
 	return dbres, err
 }

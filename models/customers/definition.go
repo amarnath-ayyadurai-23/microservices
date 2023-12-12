@@ -82,3 +82,55 @@ func (c *Customer) GetCustomer(id string) (DBCustomer, error){
 
 	return customer,nil
 }
+
+func (c *Customer) CreateCustomer(customer DBCustomer) error{
+	
+	const query = `INSERT INTO wisdom.customers
+	(customer_id, first_name, last_name, email, phone, address) 
+	VALUES (:customer_id, :first_name, :last_name, :email, :phone, :address)`
+	
+	res, err := database.NamedExecContext(c.ctx, c.log, c.db, query, customer)
+	if err != nil {
+		c.log.Printf("<Customer> %v", err)
+		return err
+	}
+	
+	c.log.Printf("<Customer> %v", res)
+	
+	return nil
+}
+
+func (c *Customer) QuerybyEmail(email string) ([]DBCustomer, error){
+
+	var customers []DBCustomer
+	query := `SELECT * FROM wisdom.customers where email = :email`
+	data := struct {
+		Email string `db:"email"`
+	}{Email: email}
+
+	err := database.NamedQuerySlice(c.ctx, c.log, c.db, query, data, &customers)
+	if err != nil {
+		c.log.Printf("<Customer> %v", err)
+		return []DBCustomer{}, err
+	}
+
+	return customers, nil
+}
+
+func (c *Customer) DeletebyID(id string) error{
+	
+	const query = `DELETE FROM wisdom.customers WHERE customer_id = :customer_id`
+	data := struct {
+		ID string `db:"customer_id"`
+	}{ID: id}
+	
+	res, err := database.NamedExecContext(c.ctx, c.log, c.db, query, data)
+	if err != nil {
+		c.log.Printf("<Customer> %v", err)
+		return err
+	}
+	
+	c.log.Printf("<Customer> %v", res)
+	
+	return nil
+}
