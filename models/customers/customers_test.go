@@ -1,25 +1,19 @@
 package customers
 
 import (
-	"context"
-	"log"
-	"os"
 	"testing"
-
-	"github.com/amarnath-ayyadurai-23/microservices/database"
-	"github.com/google/uuid"
-
-	"github.com/stretchr/testify/assert"
+	// "github.com/google/uuid"
+	// "github.com/stretchr/testify/assert"
 )
 
-var (
-	dbase	*database.Database
-	customer *Customer
-)
+// var (
+// 	dbase	*database.Database
+// 	customer *Customer
+// )
 
 func init(){
-	ctx := context.Background()
-	log := log.New(os.Stdout, "test", 1)
+	// ctx := context.Background()
+	// log := log.New(os.Stdout, "test", 1)
 	//  // Mock database connection
 	//  dbase = database.NewDatabase(ctx, log)
 	//  customer = NewCustomer(ctx, dbase.GetDB(), log)
