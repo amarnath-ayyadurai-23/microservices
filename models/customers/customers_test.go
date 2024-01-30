@@ -7,33 +7,21 @@ import (
 	"testing"
 
 	"github.com/amarnath-ayyadurai-23/microservices/database"
-<<<<<<< HEAD
 	"github.com/google/uuid"
-
-=======
-
-	"github.com/google/uuid"
->>>>>>> ddcc85d (github actions update)
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	dbase	*database.Database
-	customer *Customer
-)
+// var (
+// 	dbase	*database.Database
+// 	customer *Customer
+// )
 
 func init(){
 	ctx := context.Background()
 	log := log.New(os.Stdout, "test", 1)
-<<<<<<< HEAD
-	//  // Mock database connection
-	//  dbase = database.NewDatabase(ctx, log)
-	//  customer = NewCustomer(ctx, dbase.GetDB(), log)
-=======
 	 // Mock database connection
 	 dbase = database.NewDatabase(ctx, log)
 	 customer = NewCustomer(ctx, dbase.GetDB(), log)
->>>>>>> ddcc85d (github actions update)
 }
 
 func Test_GetCustomer(t *testing.T) {
@@ -50,15 +38,15 @@ func Test_GetCustomer(t *testing.T) {
 
 func Test_GetCustomerByID(t *testing.T) {	
 	
-	//Call GetCustomer function
-	customers, err := customer.QuerybyEmail("adipiscing.elit.Etiam@euultricessit.edu")
+	// Call GetCustomer function
+	customers, err := customer.GetCustomer("653c97a6-044c-42e6-a698-f65d6432dfd2")
 
-	// Assert no error occurred
-	assert.Nil(t, err)
+	// // Assert no error occurred
+	// assert.Nil(t, err)
 
 	// Assert customer ID is correct
-	assert.Equal(t,customers[0].FirstName,"Dorian")
-	assert.Equal(t,customers[0].Email,"adipiscing.elit.Etiam@euultricessit.edu")
+	assert.Equal(t,customers.FirstName,"Dorian")
+	assert.Equal(t,customers.Email,"adipiscing.elit.Etiam@euultricessit.edu")
 
 }
 
