@@ -35,8 +35,7 @@ func (a *api) LogF(format string) string {
 	return fmt.Sprintf("[API] %s", format)
 }
 
-
-func (a *api) Run() {
+func (a *api) RouteMap() {
 
 	a.router.Handle(http.MethodGet, "/",a.Ping)
 	
@@ -45,6 +44,13 @@ func (a *api) Run() {
 	a.router.Handle(http.MethodGet, "/customers", a.GetCustomers)
 	a.router.Handle(http.MethodGet, "/customers/:id", a.GetCustomer)
 	a.router.Handle(http.MethodGet, "/customers/email/:email", a.QuerybyEmail)
+	a.router.Handle(http.MethodPatch, "/customers/:id", a.UpdateCustomer)
+
+}
+
+func (a *api) Run() {
+
+	a.RouteMap()
 
 	a.log.Println(a.LogF("Starting server on port 8080"))
 	http.ListenAndServe(":8080", a.router)

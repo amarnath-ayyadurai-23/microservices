@@ -21,13 +21,13 @@ type DBResults struct {
 	AffectedRows int64
 }
 
-type database struct {
+type Database struct {
 	ctx context.Context
 	db *sqlx.DB
 	log *log.Logger
 }
 
-func NewDatabase(ctx context.Context, log *log.Logger) *database {
+func NewDatabase(ctx context.Context, log *log.Logger) *Database {
 	q := make(url.Values)
 	q.Set("sslmode", "disable")
 	q.Set("timezone", "utc")
@@ -44,14 +44,14 @@ func NewDatabase(ctx context.Context, log *log.Logger) *database {
 	}
 	
 	log.Printf("[DataBase] Connected to database %v", u.String())
-	return &database{
+	return &Database{
 		ctx: ctx,
 		db: db,
 		log: log,
 	}
 }
 
-func (d *database) GetDB() *sqlx.DB {
+func (d *Database) GetDB() *sqlx.DB {
 	return d.db
 }
 

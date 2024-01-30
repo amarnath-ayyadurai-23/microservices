@@ -11,10 +11,10 @@ import (
 )
 
 type DBCustomer struct {
-	ID        string `db:"customer_id" json:"customer_id"`
+	ID        string `db:"customer_id" json:"customer_id" validate:"uuid4"`
 	FirstName string `db:"first_name" json:"first_name"`
 	LastName  string `db:"last_name" json:"last_name"`
-	Email     string `db:"email" json:"email"`
+	Email     string `db:"email" json:"email" validate:"email"`
 	Phone     string `db:"phone" json:"phone"`
 	Address   string `db:"address" json:"address"`
 }
@@ -125,6 +125,24 @@ func (c *Customer) DeletebyID(id string) error{
 	}{ID: id}
 	
 	res, err := database.NamedExecContext(c.ctx, c.log, c.db, query, data)
+	if err != nil {
+		c.log.Printf("<Customer> %v", err)
+		return err
+	}
+	
+	c.log.Printf("<Customer> %v", res)
+	
+	return nil
+}
+
+func (c *Customer) UpdateCustomer(customer DBCustomer) error{
+	
+	const query = `UPDATE wisdom.customers 
+	SET first_name = :first_name, last_name = :last_name, 
+	email = :email, phone = :phone, address = :address
+	WHERE customer_id = :customer_id`
+	
+	res, err := database.NamedExecContext(c.ctx, c.log, c.db, query, customer)
 	if err != nil {
 		c.log.Printf("<Customer> %v", err)
 		return err

@@ -94,7 +94,11 @@ func (a *api) QuerybyEmail(w http.ResponseWriter, r *http.Request){
 	cus, err := a.customer.QuerybyEmail(email)
 	if err != nil {
 		a.log.Printf("<Database> %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	if cus == nil {
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 	err = json.NewEncoder(w).Encode(cus)
@@ -111,6 +115,50 @@ func (a *api) DeleteCustomer(w http.ResponseWriter, r *http.Request){
 	id := httptreemux.ContextParams(r.Context())["id"]
 	
 	err := a.customer.DeletebyID(id)
+	if err != nil {
+		a.log.Printf("<Database> %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func (a *api) UpdateCustomer(w http.ResponseWriter, r *http.Request){
+	
+	w.Header().Set("Content-Type", "application/json")
+	id := httptreemux.ContextParams(r.Context())["id"]
+	var cus customers.DBCustomer
+
+	GetCustomer, err := a.customer.GetCustomer(id)
+	if err != nil {
+		a.log.Printf("<Database> %v", err)
+		w.WriteHeader(http.StatusNotFound)
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&cus)
+	if err != nil {
+		a.log.Printf("<API> %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if cus.FirstName != "" {
+		GetCustomer.FirstName = cus.FirstName
+	}
+	if cus.LastName != "" {
+		GetCustomer.LastName = cus.LastName
+	}
+	if cus.Email != "" {
+		GetCustomer.Email = cus.Email
+	}
+	if cus.Phone != "" {
+		GetCustomer.Phone = cus.Phone
+	}
+	if cus.Address != "" {
+		GetCustomer.Address = cus.Address
+	}
+
+	err = a.customer.UpdateCustomer(GetCustomer)
 	if err != nil {
 		a.log.Printf("<Database> %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
