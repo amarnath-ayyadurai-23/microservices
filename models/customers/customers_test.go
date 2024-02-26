@@ -1,6 +1,9 @@
 package customers
 
 import (
+	"context"
+	"log"
+	"os"
 	"testing"
 
 	"github.com/amarnath-ayyadurai-23/microservices/database"
