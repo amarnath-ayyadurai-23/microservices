@@ -11,17 +11,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// var (
-// 	dbase	*database.Database
-// 	customer *Customer
-// )
+
+var (
+dbase	*database.Database
+customer *Customer
+)
 
 func init(){
-	ctx := context.Background()
+  ctx := context.Background()
 	log := log.New(os.Stdout, "test", 1)
-	 // Mock database connection
-	 dbase = database.NewDatabase(ctx, log)
-	 customer = NewCustomer(ctx, dbase.GetDB(), log)
+	// Mock database connection
+	dbase = database.NewDatabase(ctx, log)
+	customer = NewCustomer(ctx, dbase.GetDB(), log)
 }
 
 func Test_GetCustomer(t *testing.T) {
@@ -36,17 +37,17 @@ func Test_GetCustomer(t *testing.T) {
     assert.Greater(t, len(customers),10)
 }
 
-func Test_GetCustomerByID(t *testing.T) {	
+func Test_GetCustomerByEmail(t *testing.T) {	
 	
-	// Call GetCustomer function
-	customers, err := customer.GetCustomer("653c97a6-044c-42e6-a698-f65d6432dfd2")
+	//Call GetCustomer function
+	customers, err := customer.QuerybyEmail("adipiscing.elit.Etiam@euultricessit.edu")
 
 	// // Assert no error occurred
 	// assert.Nil(t, err)
 
 	// Assert customer ID is correct
-	assert.Equal(t,customers.FirstName,"Dorian")
-	assert.Equal(t,customers.Email,"adipiscing.elit.Etiam@euultricessit.edu")
+	assert.Equal(t,customers[0].FirstName,"Dorian")
+	assert.Equal(t,customers[0].Email,"adipiscing.elit.Etiam@euultricessit.edu")
 
 }
 
@@ -55,10 +56,10 @@ func Test_createUpdateNDelete(t *testing.T) {
 	id := uuid.New().String() 
 	// Create customer
 	cus:= DBCustomer{
-		ID: id,
-		FirstName: "Test",
-		LastName: "User",
-		Email: "test@test.com",
+	  ID: id,
+	  FirstName: "Test",
+	  LastName: "User",
+	  Email: "test@test.com",
 	}
 
 	// Call CreateCustomer function
@@ -73,7 +74,7 @@ func Test_createUpdateNDelete(t *testing.T) {
 	err = customer.UpdateCustomer(cus)
 	assert.Nil(t, err)
 
-	// delete customer
+  // delete customer
 	err = customer.DeletebyID(id)
 	assert.Nil(t, err)
 
