@@ -40,7 +40,7 @@ func Test_GetCustomer(t *testing.T) {
 func Test_GetCustomerByEmail(t *testing.T) {	
 	
 	//Call GetCustomer function
-	customers, err := customer.QuerybyEmail("adipiscing.elit.Etiam@euultricessit.edu")
+	customers, _ := customer.QuerybyEmail("adipiscing.elit.Etiam@euultricessit.edu")
 
 	// // Assert no error occurred
 	// assert.Nil(t, err)
