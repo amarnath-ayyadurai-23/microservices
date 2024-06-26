@@ -22,7 +22,7 @@ jobs:
         go-version: '1.22.x'
 
     - name: Task cli Installation
-      run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+      run: go install github.com/go-task/task/v3/cmd/task@latest
 
     - name : Setup docker stack
       run: task local-db && sleep 45
